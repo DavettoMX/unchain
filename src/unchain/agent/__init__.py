@@ -1,0 +1,46 @@
+from unchain.agent.envelope import Envelope, EnvelopeError, ToolCall, parse_envelope
+from unchain.agent.history import (
+    OUTPUT_CONTRACT,
+    PromptTemplate,
+    build_system_prompt,
+    fit_history,
+)
+from unchain.agent.loop import (
+    Agent,
+    AgentConfig,
+    AgentEvent,
+    AgentFailed,
+    AgentRunResult,
+    CompletionBackend,
+    EventCallback,
+    FinalAnswer,
+    IterationStarted,
+    RunRecorder,
+    TextDelta,
+    ToolCallFinished,
+    ToolCallStarted,
+)
+
+__all__ = [
+    "OUTPUT_CONTRACT",
+    "Agent",
+    "AgentConfig",
+    "AgentEvent",
+    "AgentFailed",
+    "AgentRunResult",
+    "CompletionBackend",
+    "Envelope",
+    "EnvelopeError",
+    "EventCallback",
+    "FinalAnswer",
+    "IterationStarted",
+    "PromptTemplate",
+    "RunRecorder",
+    "TextDelta",
+    "ToolCall",
+    "ToolCallFinished",
+    "ToolCallStarted",
+    "build_system_prompt",
+    "fit_history",
+    "parse_envelope",
+]

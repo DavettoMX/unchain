@@ -1,0 +1,54 @@
+[project]
+name = "unchain"
+version = "0.1.0"
+description = "Lightweight agentic runtime for llama.cpp servers: local-first, deterministic tool calling, Postgres-backed state."
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.8",
+    "asyncpg>=0.30",
+]
+
+[project.scripts]
+unchain = "unchain.cli.__main__:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+    "mypy>=1.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/unchain"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "ASYNC", "RUF"]
+# ASYNC109: we pass explicit second-values into asyncio.wait_for, not loop timeouts
+ignore = ["ASYNC109"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = "asyncpg.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: requires a live llama.cpp server and/or Postgres (set UNCHAIN_SERVER / UNCHAIN_DSN)",
+]

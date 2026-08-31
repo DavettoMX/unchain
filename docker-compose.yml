@@ -1,0 +1,40 @@
+services:
+  unchain-db:
+    image: postgres:17-alpine
+    container_name: unchain-db
+    environment:
+      POSTGRES_USER: unchain
+      POSTGRES_PASSWORD: unchain
+      POSTGRES_DB: unchain
+    ports:
+      - "5432:5432"
+    volumes:
+      - unchain_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unchain -d unchain"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  # Optional local LLM backend: `docker compose --profile llm up`
+  # Put a GGUF file under ./models and set MODEL_FILE below.
+  llama-server:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: unchain-llama
+    profiles: ["llm"]
+    command:
+      - -m
+      - /models/${MODEL_FILE:-model.gguf}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - -c
+      - "8192"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./models:/models:ro
+
+volumes:
+  unchain_pgdata:
